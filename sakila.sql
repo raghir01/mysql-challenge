@@ -1,14 +1,14 @@
 use sakila;
 -- 1a. Display the first and last names of all actors from the table actor-- 
-select first_name,last_name from actor;
+select first_name, last_name from actor;
 -- 1b. Display the first and last name of each actor in a single column in upper case letters. Name the column Actor Name
 select upper(concat(first_name, ' ',  last_name)) as "Actor Name"  from actor;
 -- 2a. You need to find the ID number, first name, and last name of an actor, of whom you know only the first name, "Joe." 
 select actor_id, first_name, last_name from actor where first_name = "Joe";
 -- 2b. Find all actors whose last name contain the letters GEN:
-select * from actor where last_name like '%GEN%';
+select first_name, last_name from actor where last_name like '%GEN%';
 -- 2c. Find all actors whose last names contain the letters LI. This time, order the rows by last name and first name, in that order:
-select * from actor where last_name like '%LI%' order by last_name, first_name;
+select first_name, last_name from actor where last_name like '%LI%' order by last_name, first_name;
 -- 2d. Using IN, display the country_id and country columns of the following countries: Afghanistan, Bangladesh, and China:
 select country_id, country from country where country in('Afghanistan' , 'Bangladesh', 'China');
 -- 3a. You want to keep a description of each actor. You don't think you will be performing queries on a description, so create a column in the table 
@@ -19,7 +19,7 @@ alter table actor drop column description;
 -- 4a. List the last names of actors, as well as how many actors have that last name.
 select last_name , count(*) from actor group by last_name order by last_name;
 -- 4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors
-select last_name , count(*) from actor group by last_name having count(*) > 1 order by last_name;
+select last_name, count(*) from actor group by last_name having count(*) > 1 order by last_name;
 -- 4c. The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.
 update actor set first_name = 'HARPO' where first_name = 'GROUCHO'  and last_name = 'WILLIAMS';
 -- 4d. Perhaps we were too hasty in changing GROUCHO to HARPO. It turns out that GROUCHO was the correct name after all! In a single query, 
@@ -28,17 +28,17 @@ update actor set first_name = 'GROUCHO'  where first_name = 'HARPO';
 -- 5a. You cannot locate the schema of the address table. Which query would you use to re-create it?
 show create table address;
 -- 6a. Use JOIN to display the first and last names, as well as the address, of each staff member. Use the tables staff and address:
-select s.first_name, s.last_name, a.address from staff as s join address as a on s.address_id = a.address_id;
+select s.first_name, s.last_name, a.address from staff s join address a on s.address_id = a.address_id;
 -- 6b. Use JOIN to display the total amount rung up by each staff member in August of 2005. Use tables staff and payment.
-select s.first_name, sum(p.amount) as 'total amount' from staff as s 
-join payment as p on s.staff_id = p.staff_id
+select s.first_name,  sum(p.amount) as 'total amount' from staff s 
+join payment p on s.staff_id = p.staff_id
 and date(p.payment_date) >= '2005-08-01' and date(p.payment_date) <= '2005-08-31'
 group by  s.first_name;
 -- 6c. List each film and the number of actors who are listed for that film. Use tables film_actor and film. Use inner join.
-select f.title, count(fc.actor_id) as actor_count from film as f 
+select f.title as film_title, count(fc.actor_id) as actor_count from film as f 
 inner join film_actor as fc on f.film_id = fc.film_id group by f.title;
 -- 6d. How many copies of the film Hunchback Impossible exist in the inventory system?
-select f.title, count(i.inventory_id) as inventory_count from film as f 
+select f.title as film_title, count(i.inventory_id) as inventory_count from film as f 
 inner join inventory as i on f.film_id = i.film_id 
 where f.title = 'Hunchback Impossible'
 group by f.title;
@@ -82,7 +82,7 @@ inner join rental r on st.staff_id = r.staff_id
 inner join payment p on r.rental_id = p.rental_id
 group by a.address;
 -- 7g. Write a query to display for each store its store ID, city, and country.
-select s.store_id, s.address_id, a.city_id, ci.city, co.country from store s
+select s.store_id, ci.city, co.country from store s
 inner join address a on s.address_id = a.address_id
 inner join city ci on a.city_id = ci.city_id
 inner join country co on co.country_id = ci.country_id;
