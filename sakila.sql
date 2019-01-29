@@ -26,10 +26,10 @@ alter table actor add column description blob null;
 alter table actor drop column description;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- 4a. List the last names of actors, as well as how many actors have that last name.
-select last_name , count(*) from actor group by last_name order by last_name;
+select last_name , count(*) as actor_count from actor group by last_name order by last_name;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- 4b. List last names of actors and the number of actors who have that last name, but only for names that are shared by at least two actors
-select last_name, count(*) from actor group by last_name having count(*) > 1 order by last_name;
+select last_name, count(*) as actor_count from actor group by last_name having count(*) > 1 order by last_name;
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------
 -- 4c. The actor HARPO WILLIAMS was accidentally entered in the actor table as GROUCHO WILLIAMS. Write a query to fix the record.
 update actor set first_name = 'HARPO' where first_name = 'GROUCHO'  and last_name = 'WILLIAMS';
